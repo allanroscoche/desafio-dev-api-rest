@@ -1,0 +1,26 @@
+{
+  "name": "desafio-dev-api-rest",
+  "version": "1.0.0",
+  "description": "Olá, queremos convidá-lo(a) a participar do nosso desafio de seleção.  Pronto(a) para participar? Seu trabalho será visto pelo nosso time e você receberá um feedback ao final sobre o que achamos do seu trabalho. Não é legal?",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allanroscoche/desafio-dev-api-rest.git"
+  },
+  "author": "Allan Roscoche",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/allanroscoche/desafio-dev-api-rest/issues"
+  },
+  "homepage": "https://github.com/allanroscoche/desafio-dev-api-rest#readme",
+  "dependencies": {
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.18.0"
+  }
+}
