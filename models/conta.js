@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
   Conta.init({
     idConta: { 
       type: DataTypes.INTEGER,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     saldo: DataTypes.DECIMAL,
     limiteSaqueDiario: DataTypes.DECIMAL,

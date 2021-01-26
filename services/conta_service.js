@@ -10,36 +10,55 @@ function sub(base, valor) {
       const valor_decimal = BigDecimal(valor);
       return saldo_decimal.sub(valor_decimal.abs());
 }
-
-
+function format({
+  idConta, saldo, idPessoa, limiteSaqueDiario, 
+  flagAtivo, dataCriacao, tipoConta
+  }) {
+  if(!flagAtivo) {
+    return { msg: "Conta bloqueada" }
+  }
+  return {
+    idConta,
+    idPessoa,
+    saldo,
+    limiteSaqueDiario,
+    tipoConta,
+    dataCriacao: (new Date(dataCriacao)).toLocaleString()
+  }
+}
 module.exports = class ContaService {
   constructor(conta) {
     this.conta = conta;
   }
   async criar({idPessoa, tipoConta}) {
-    await this.conta.create({
+    const conta = await this.conta.create({
       idPessoa,
       tipoConta,
       saldo:0,
       limiteSaqueDiario: 100,
       flagAtivo: true
     });
+    return format(conta);
+  }
+  async consultar({contaId}) {
+    const conta =  await this.conta.findByPk(contaId);
+    if(conta)
+      return format(conta);
+    else
+      return null;
   }
   async depositar({contaId, valor}) {
     const conta = await this.conta.findByPk(contaId);
-    if(conta) {
+    if(conta && conta.flagAtivo) {
       conta.saldo = add(conta.saldo, valor) 
       await conta.save();
       return true;
     }
     return false;
   }
-  consultar({contaId}) {
-    return this.conta.findByPk(contaId);
-  }
   async sacar({contaId, valor}) {
     const conta = await this.conta.findByPk(contaId);
-    if(conta) {
+    if(conta && conta.flagAtivo) {
       conta.saldo = sub(conta.saldo, valor);
       await conta.save();
       return true;
