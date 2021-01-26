@@ -30,6 +30,7 @@ module.exports = class ContaService {
     if(conta) {
       conta.saldo = add(conta.saldo, valor) 
       await conta.save();
+      return true;
     }
     return false;
   }
@@ -41,6 +42,7 @@ module.exports = class ContaService {
     if(conta) {
       conta.saldo = sub(conta.saldo, valor);
       await conta.save();
+      return true;
     }
     return false;
   }
@@ -49,6 +51,7 @@ module.exports = class ContaService {
     if(conta) {
       conta.flagAtivo = false; 
       await conta.save();
+      return true;
     }
     return false;
   }
