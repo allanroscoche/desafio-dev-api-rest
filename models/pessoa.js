@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Pessoa.hasMany(models.Conta);
     }
   }
   Pessoa.init({
@@ -22,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Pessoa',
+    timestamps: false
   });
   return Pessoa;
 };

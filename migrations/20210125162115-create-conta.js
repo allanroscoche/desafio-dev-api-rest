@@ -27,7 +27,7 @@ module.exports = {
       tipoConta: {
         type: Sequelize.STRING
       },
-      dataCriacao: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE
       },

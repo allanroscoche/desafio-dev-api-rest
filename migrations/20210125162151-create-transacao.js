@@ -18,7 +18,7 @@ module.exports = {
       valor: {
         type: Sequelize.DECIMAL(10,2)
       },
-      dataTransacao: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE
       },

@@ -12,19 +12,29 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Conta.hasMany(models.Transacao);
+      Conta.belongsTo(models.Pessoa, {
+        foreignKey: 'idPessoa'
+      });
     }
   }
   Conta.init({
-    idConta: DataTypes.INTEGER,
-    idPessoa: DataTypes.INTEGER,
+    idConta: { 
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
     saldo: DataTypes.DECIMAL,
     limiteSaqueDiario: DataTypes.DECIMAL,
     flagAtivo: DataTypes.BOOLEAN,
     tipoConta: DataTypes.INTEGER,
-    dataCriacao: DataTypes.DATE
+    dataCriacao: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return this.createdAt;
+      }
+    }
   }, {
     sequelize,
-    modelName: 'Conta',
+    modelName: 'Contas',
   });
   return Conta;
 };
