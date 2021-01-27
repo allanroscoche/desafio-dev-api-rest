@@ -1,15 +1,5 @@
 const { BigDecimal } = require("bigdecimal");
 
-function add(base, valor) {
-      const saldo_decimal = BigDecimal(base);
-      const valor_decimal = BigDecimal(valor);
-      return saldo_decimal.add(valor_decimal.abs());
-}
-function sub(base, valor) {
-      const saldo_decimal = BigDecimal(base);
-      const valor_decimal = BigDecimal(valor);
-      return saldo_decimal.sub(valor_decimal.abs());
-}
 function format({
   idConta, saldo, idPessoa, limiteSaqueDiario, 
   flagAtivo, dataCriacao, tipoConta
@@ -27,8 +17,9 @@ function format({
   }
 }
 module.exports = class ContaService {
-  constructor(conta) {
+  constructor(conta, transacoes) {
     this.conta = conta;
+    this.transacoes = transacoes;
   }
   async criar({idPessoa, tipoConta}) {
     const conta = await this.conta.create({
@@ -50,18 +41,28 @@ module.exports = class ContaService {
   async depositar({contaId, valor}) {
     const conta = await this.conta.findByPk(contaId);
     if(conta && conta.flagAtivo) {
-      conta.saldo = add(conta.saldo, valor) 
+      const valor_decimal = BigDecimal(valor).abs();
+      conta.saldo = BigDecimal(conta.saldo).add(valor_decimal); 
+      const tran = await this.transacoes.create({
+        idConta: contaId,
+        valor: valor_decimal,
+      });
       await conta.save();
-      return true;
+      return {idTransacao: tran.idTransacao};
     }
     return false;
   }
   async sacar({contaId, valor}) {
     const conta = await this.conta.findByPk(contaId);
     if(conta && conta.flagAtivo) {
-      conta.saldo = sub(conta.saldo, valor);
+      const valor_decimal = BigDecimal(valor).abs();
+      conta.saldo = BigDecimal(conta.saldo).subtract(valor_decimal); 
+      const tran = await this.transacoes.create({
+        idConta: contaId,
+        valor: -valor_decimal,
+      });
       await conta.save();
-      return true;
+      return {idTransacao: tran.idTransacao};
     }
     return false;
   }
@@ -73,5 +74,22 @@ module.exports = class ContaService {
       return true;
     }
     return false;
+  }
+  async extrato({contaId}) {
+    const transactions = await this.transacoes.findAll({
+      where: {
+        idConta: contaId
+      }
+    });
+    const extrato =  transactions.map( ({idTransacao, valor}) => {
+      return {
+        idTransacao,
+        valor: BigDecimal(valor).toString()
+      };
+    });
+    return {
+      contaId,
+      extrato
+    };
   }
 }

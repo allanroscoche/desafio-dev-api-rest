@@ -16,6 +16,8 @@
   "bugs": {
     "url": "https://github.com/allanroscoche/desafio-dev-api-rest/issues"
   },
+  "jest": {
+  },
   "homepage": "https://github.com/allanroscoche/desafio-dev-api-rest#readme",
   "dependencies": {
     "bigdecimal": "^0.6.1",

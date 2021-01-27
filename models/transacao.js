@@ -11,16 +11,29 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Transacao.belongsTo(models.Contas, {
+        foreignKey: 'idConta'
+      });
+
     }
   };
   Transacao.init({
-    idTransacao: DataTypes.INTEGER,
-    idConta: DataTypes.INTEGER,
+    idTransacao: { 
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     valor: DataTypes.DECIMAL,
-    dataTransacao: DataTypes.DATE
-  }, {
+    dataTransacao: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return this.createdAt;
+        }
+      }
+    }, {
     sequelize,
     modelName: 'Transacao',
+    tableName: 'Transacoes'
   });
   return Transacao;
 };

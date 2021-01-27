@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const ContaService = require("./services/conta_service");
-const { Contas } = require("./models");
-const service = new ContaService(Contas);
+const { Contas, Transacao } = require("./models");
+const service = new ContaService(Contas, Transacao);
 
 /**
  * @swagger
@@ -109,10 +109,30 @@ router.post('/contas/:id/saque', async (req, res) => {
   const msg = conta ? "Conta bloqueada" : "Nao encontrado";
   res.json({msg});
 });
+/**
+ * @swagger
+ *
+ * /contas/{contaId}/extrato:
+ *   get:
+ *     summary: Obtem o extrato uma conta
+ *     description: Cria um deposito na conta
+ *     responses:
+ *       200:
+ *         description: Conta encontrada
+ *       404:
+ *         description: Conta nao encontrada
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: contaId
+ *         in: path
+ *         required: true
+ *         type: integer
+ */
 router.get('/contas/:id/extrato', async (req, res) => {
   const id = req.params.id;
-  const msg = {id};
-  res.json({msg});
+  const extrato = await service.extrato({contaId: id});
+  res.json(extrato);
 });
 /**
  * @swagger
